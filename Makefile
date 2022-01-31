@@ -4,7 +4,8 @@ NAME =	philo
 SRCS = 		main.c\
 			init.c\
 			utils.c\
-			kill.c
+			kill.c\
+			threads.c
 
 OBJS =	$(SRCS:.c=.o)
 
