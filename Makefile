@@ -5,13 +5,14 @@ SRCS = 		main.c\
 			init.c\
 			utils.c\
 			kill.c\
-			threads.c
+			threads.c\
+			deathnote.c
 
 OBJS =	$(SRCS:.c=.o)
 
 CC =	gcc
 
-CFLAGS = -Wall -Werror -Wextra -g3 -fsanitize=thread #-fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -pthread -g3 -fsanitize=address #-fsanitize=thread
 
 RM = 	rm -f
 
@@ -23,7 +24,7 @@ HEADERS	=	-I $(INCS)
 	$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 
 $(NAME) : $(OBJS)
-	$(CC) $(CFLAGS) $^ -o $(NAME)
+	$(CC) $(CFLAGS) $^ -o $@
 
 all : $(NAME)
 

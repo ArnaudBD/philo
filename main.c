@@ -3,12 +3,11 @@
 int	main(int argc, char *argv[])
 {
 	t_config	c;
-	// t_philo		p;
 	int			i;
-	// pthread_t	chronos;
+	pthread_t	chronos;
 
 	if (parsing(argc, argv, &c) == FAILURE)
-		return (terminator(&c, ERR_PARS));
+		return (0);
 	if (init(&c, argc, argv) == FAILURE)
 		return (terminator(&c, ERR_INIT));
 
@@ -20,15 +19,13 @@ int	main(int argc, char *argv[])
 		i++;
 	}
 // Chronos thread
-	// pthread_create(&chronos, NULL, timekeeper, NULL);
-	// pthread_detach(chronos);
+	pthread_create(&chronos, NULL, timekeeper, &c);
+	pthread_detach(chronos);
 
 // Join threads
-	while (i >= 0)
-	{
-		pthread_join(c.philos[i].t, NULL);
-		i--;
-	}
+	while (--i >= 0)
+		pthread_join(c.philos[i].t, NULL); //== SUCCESS else pthread_mutex_destroy
+
 
 // // Show the mutex\'s addresses 
 // 	i = 0;
@@ -40,6 +37,7 @@ int	main(int argc, char *argv[])
 // 		printf("rfork == %p\n\n",c.philos[i].rfork);
 // 		i++;
 // 	}
-	printf("Time of start is %20lld\n", c.ms_start + 1000);
+	// printf("Time of start is %20lld\n", c.ms_start + 1000);
+	// printf("the value inside the casket is: %d\n", c.philos[0].dead_body);
 	return (terminator(&c, SUCCESS));
 }

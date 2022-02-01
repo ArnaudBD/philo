@@ -24,9 +24,13 @@ typedef struct	s_philo
 	int				id;
 	pthread_mutex_t	*rfork;
 	pthread_mutex_t *lfork;
+	pthread_mutex_t casket;
+	int				dead_body;
 	pthread_t		t;
 	struct timeval	tv;
 	long long int	ms_start;
+	pthread_mutex_t stomach;
+	long long int	last_meal;
 	int				time_to_die;
 	int 			time_to_eat;
 	int 			time_to_sleep;
@@ -39,6 +43,8 @@ typedef	struct	s_config
 {
 	t_philo			*philos;
 	pthread_mutex_t	*forklist;
+	pthread_mutex_t casket;
+	int				dead_body;
 	int 			number_of_philosophers;
 	int				time_to_die;
 	int 			time_to_eat;
@@ -65,8 +71,12 @@ int		ft_atoi(const char *str);
 // KILL
 int	terminator(t_config *c, int code);
 
-//THREADS
-void *routine(void * arg);
+// THREADS
+void	*routine(void * arg);
+void	*routine_solo(void *arg);
+
+// DEATHNOTE
+void *timekeeper(void *arg);
 
 
 #endif

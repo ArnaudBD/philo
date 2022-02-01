@@ -4,6 +4,7 @@ int	terminator(t_config *c, int code)
 {
 	int	i;
 
+	i = 0;
 	while (i < c->number_of_philosophers)
 	{
 		pthread_mutex_destroy(&c->forklist[i]);

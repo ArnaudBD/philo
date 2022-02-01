@@ -2,13 +2,27 @@
 
 int	parsing(int argc, char *argv[], t_config *c)
 {
-	(void)argv;
+	pthread_t	t;
+
 	if (argc != 5 && argc != 6)
 		return (terminator(c, ERR_PARS));
-	return (0);
+	if (ft_atoi(argv[1]) <= 0 || ft_atoi(argv[2]) < 0 || ft_atoi(argv[3]) < 0 || ft_atoi(argv[4]) < 0)
+		return (terminator(c , ERR_PARS));
+	if (argc == 6)
+	{
+		if (ft_atoi(argv[5]) <= 0)
+			return (terminator(c, ERR_PARS));
+	}
+	if (ft_atoi(argv[1]) == 1)
+	{
+		pthread_create(&t, NULL, routine_solo, argv[2]);
+		pthread_join(t, NULL);
+		return (FAILURE);
+	}
+	return (SUCCESS);
 }
 
-int	init_philosophers(t_config *c)
+void	init_philosophers(t_config *c)
 {
 	int	i;
 
@@ -18,9 +32,11 @@ int	init_philosophers(t_config *c)
 		c->philos[i].id = i + 1;
 		c->philos[i].ms_start = c->ms_start;
 		c->philos[i].lfork = &c->forklist[i];
+		c->philos[i].dead_body = c->dead_body;
 		c->philos[i].time_to_die = c->time_to_die;
 		c->philos[i].time_to_eat = c->time_to_eat;
 		c->philos[i].time_to_sleep = c->time_to_sleep;
+		c->philos[i].last_meal = c->ms_start;
 		pthread_mutex_init(&c->forklist[i], NULL);
 		if (i + 1 == c->number_of_philosophers)
 		{
@@ -34,7 +50,6 @@ int	init_philosophers(t_config *c)
 		}
 		i++;
 	}
-	return (SUCCESS);
 }
 
 int	init(t_config *c, int argc, char *argv[])
@@ -46,6 +61,7 @@ int	init(t_config *c, int argc, char *argv[])
 	c->time_to_die = ft_atoi(argv[2]);
 	c->time_to_eat = ft_atoi(argv[3]);
 	c->time_to_sleep = ft_atoi(argv[4]);
+	c->dead_body = 0;
 	if (argc == 6)
 		c->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
 	c->philos = malloc(sizeof(t_philo) * c->number_of_philosophers);
