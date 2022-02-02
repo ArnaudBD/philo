@@ -24,7 +24,7 @@ typedef struct	s_philo
 	int				id;
 	pthread_mutex_t	*rfork;
 	pthread_mutex_t *lfork;
-	pthread_mutex_t casket;
+	pthread_mutex_t *casket;
 	int				dead_body;
 	pthread_t		t;
 	struct timeval	tv;
@@ -69,7 +69,7 @@ int	init(t_config *c, int argc, char *argv[]);
 
 // UTILS
 int		ft_atoi(const char *str);
-long long int time_after_start(t_philo *p);
+long long int time_after_start(struct timeval start_time);
 
 // KILL
 int	terminator(t_config *c, int code);

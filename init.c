@@ -39,7 +39,7 @@ t_config	*init_philosophers(t_config *c)
 		c->philos[i].time_to_eat = c->time_to_eat;
 		c->philos[i].time_to_sleep = c->time_to_sleep;
 		c->philos[i].last_meal = c->ms_start;
-		pthread_mutex_init(&c->forklist[i], NULL);
+		c->philos[i].casket = &c->casket;
 		if (i + 1 == c->number_of_philosophers)
 		{
 			pthread_mutex_init(&c->forklist[0], NULL);
@@ -71,6 +71,7 @@ int	init(t_config *c, int argc, char *argv[])
 	if (!c->philos)
 		return (FAILURE);
 	c->forklist = malloc(sizeof(pthread_mutex_t) * c->number_of_philosophers);
+	pthread_mutex_init(&c->casket, NULL);
 	c = init_philosophers(c);
 	return (SUCCESS);
 }
