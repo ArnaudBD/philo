@@ -28,9 +28,11 @@ typedef struct	s_philo
 	int				dead_body;
 	pthread_t		t;
 	struct timeval	tv;
+	struct	timeval	start_time;
 	long long int	ms_start;
 	pthread_mutex_t stomach;
 	long long int	last_meal;
+	int 			number_of_philosophers;
 	int				time_to_die;
 	int 			time_to_eat;
 	int 			time_to_sleep;
@@ -67,6 +69,7 @@ int	init(t_config *c, int argc, char *argv[]);
 
 // UTILS
 int		ft_atoi(const char *str);
+long long int time_after_start(t_philo *p);
 
 // KILL
 int	terminator(t_config *c, int code);

@@ -11,12 +11,12 @@ void *timekeeper(void *arg)
 	c = (t_config *)arg;
 	i = 0;
 	gettimeofday(&c->philos->tv, NULL);
-	ms_tv = (c->philos->tv.tv_sec * 1000) + (c->philos->tv.tv_usec / 1000) - c->philos->ms_start;
+	ms_tv = (c->philos->tv.tv_sec * 1000) + (c->philos->tv.tv_usec / 1000) - (1000 + (c->start_time.tv_sec * 1000) + (c->start_time.tv_usec / 1000));
 	while (ms_tv < 0)
 	{
 		usleep(100);
 		gettimeofday(&c->philos->tv, NULL);
-		ms_tv = (c->philos->tv.tv_sec * 1000) + (c->philos->tv.tv_usec / 1000) - c->philos->ms_start;
+		ms_tv = (c->philos->tv.tv_sec * 1000) + (c->philos->tv.tv_usec / 1000) - (1000 + (c->start_time.tv_sec * 1000) + (c->start_time.tv_usec / 1000));
 	}
 
 	while (1)
@@ -24,10 +24,10 @@ void *timekeeper(void *arg)
 			id = c->philos[i].id;
 			pthread_mutex_lock(&c->philos[i].stomach);
 			gettimeofday(&tv, NULL);
-			ms_tv = (tv.tv_sec * 1000) + (tv.tv_usec / 1000) - c->philos->ms_start;
+			ms_tv = (tv.tv_sec * 1000) + (tv.tv_usec / 1000) - (1000 + (c->start_time.tv_sec * 1000) + (c->start_time.tv_usec / 1000));
 			if ((ms_tv - c->philos[i].last_meal) > c->time_to_die)
 			{
-				printf("%lld %d Died\n", ms_tv, id);
+				printf("%lld %d died\n", ms_tv, id);
 				pthread_mutex_unlock(&c->philos[i].stomach);
 				break ;
 			}

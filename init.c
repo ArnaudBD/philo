@@ -22,7 +22,7 @@ int	parsing(int argc, char *argv[], t_config *c)
 	return (SUCCESS);
 }
 
-void	init_philosophers(t_config *c)
+t_config	*init_philosophers(t_config *c)
 {
 	int	i;
 
@@ -30,7 +30,9 @@ void	init_philosophers(t_config *c)
 	while (i < c->number_of_philosophers)
 	{
 		c->philos[i].id = i + 1;
+// printf("init id philo[%d] == %d\n", i, c->philos[i].id);
 		c->philos[i].ms_start = c->ms_start;
+		c->philos[i].start_time = c->start_time;
 		c->philos[i].lfork = &c->forklist[i];
 		c->philos[i].dead_body = c->dead_body;
 		c->philos[i].time_to_die = c->time_to_die;
@@ -50,6 +52,7 @@ void	init_philosophers(t_config *c)
 		}
 		i++;
 	}
+	return (c);
 }
 
 int	init(t_config *c, int argc, char *argv[])
@@ -68,6 +71,7 @@ int	init(t_config *c, int argc, char *argv[])
 	if (!c->philos)
 		return (FAILURE);
 	c->forklist = malloc(sizeof(pthread_mutex_t) * c->number_of_philosophers);
-	init_philosophers(c);
+	c = init_philosophers(c);
+printf("init add = %p\n", c->philos);
 	return (SUCCESS);
 }

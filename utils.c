@@ -33,3 +33,14 @@ int		ft_atoi(const char *str)
 	}
 	return (resultat * n);
 }
+
+long long int time_after_start(t_philo *p)
+{
+	long long int	time;
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000)\
+	- (1000 + (p->start_time.tv_sec * 1000) + (p->start_time.tv_usec / 1000));
+	return (time);
+}

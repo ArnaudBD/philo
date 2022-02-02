@@ -15,50 +15,60 @@ int	ft_isdead(t_philo *p)
 
 int	grabing_forks(long long int ms_time, t_philo *p, int *i)
 {
-	if (*i == 0 && p->id % 2 == 0)
+(void)ms_time;
+	if (p->id % 2 == 0)
 	{
+		if (*i == 0)
+		{
+			usleep(p->time_to_eat / 2);
+		}
 		*i = 1;
-		usleep(p->time_to_eat);
-		pthread_mutex_lock(p->lfork);
-		gettimeofday(&p->tv, NULL);
-		ms_time = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
+		pthread_mutex_lock(p->rfork);
+		ms_time = time_after_start(p);
 		if (ft_isdead(p) == SUCCESS)
-			printf("%lld %d has taken a fork\n", ms_time, p->id);
+			printf("%lld %d has taken a fork\n", time_after_start(p), p->id);
+		pthread_mutex_lock(p->lfork);
+		ms_time = time_after_start(p);
+		if (ft_isdead(p) == SUCCESS)
+			printf("%lld %d has taken a fork\n", time_after_start(p), p->id);
 	}
 	else 
 	{
 		pthread_mutex_lock(p->lfork);
-		gettimeofday(&p->tv, NULL);
-		ms_time = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
+		ms_time = time_after_start(p);
 		if (ft_isdead(p) == SUCCESS)
-			printf("%lld %d has taken a fork\n", ms_time, p->id);
+			printf("%lld %d has taken a fork\n", time_after_start(p), p->id);
+		pthread_mutex_lock(p->rfork);
+		ms_time = time_after_start(p);
+		if (ft_isdead(p) == SUCCESS)
+			printf("%lld %d has taken a fork\n", time_after_start(p), p->id);
 	}
-	pthread_mutex_lock(p->rfork);
 	// if (ft_isdead(p) == FAILURE)
 	// 	return (FAILURE);
-	gettimeofday(&p->tv, NULL);
-	ms_time = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
-	if (ft_isdead(p) == SUCCESS)
-		printf("%lld %d has taken a fork\n", ms_time, p->id);
+	// gettimeofday(&p->tv, NULL);
+	// ms_time = time_after_start(p);
+	// if (ft_isdead(p) == SUCCESS)
+	// 	printf("%lld %d has taken a fork\n", ms_time, p->id);
 	return (SUCCESS);
 }
 
-int	eating(long long int ms_time, t_philo *p)
+int	eating(t_philo *p)
 {
 	long long int begining;
+	long long int now;
 
 	gettimeofday(&p->tv, NULL);
-	begining = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
+	begining = time_after_start(p);
+	now = begining;
 	if (ft_isdead(p) == SUCCESS)
-		printf("%lld %d is eating\n", begining, p->id);
+		printf("%lld %d is eating\n", time_after_start(p), p->id);
 	pthread_mutex_lock(&p->stomach);
 	p->last_meal = begining;
 	pthread_mutex_unlock(&p->stomach);
-	while (ms_time - begining < p->time_to_eat)
+	while (now - begining < p->time_to_eat)
 	{
-		gettimeofday(&p->tv, NULL);
-		ms_time = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
-		usleep(p->time_to_eat / 100);
+		now = time_after_start(p);
+		usleep(500);
 		// if (ft_isdead(p) == FAILURE)
 		// 	return (FAILURE);
 	}
@@ -67,31 +77,47 @@ int	eating(long long int ms_time, t_philo *p)
 	return (SUCCESS);
 }
 
-int	sleeping_and_thinking(long long int ms_time, t_philo *p)
+int	sleeping_and_thinking(t_philo *p)
 {
 	long long int	begining;
+	long long int	now;
 
-	if (ft_isdead(p) == FAILURE)
-		return (FAILURE);
-	begining = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
+	begining = time_after_start(p);
+	now = begining;
 	if (ft_isdead(p) == SUCCESS)
-		printf("%lld %d is sleeping\n", begining, p->id);
-	while (ms_time - begining < p->time_to_sleep)
+		printf("%lld %d is sleeping\n", time_after_start(p), p->id);
+	else
+		return (FAILURE);
+	while (now - begining < p->time_to_sleep)
 	{
-		gettimeofday(&p->tv, NULL);
-		ms_time = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
-		usleep(p->time_to_sleep / 100);
-		if (ft_isdead(p) == FAILURE)
-			return (FAILURE);
+		now = time_after_start(p);
+		usleep(500);
+		// if (ft_isdead(p) == FAILURE)
+		// 	return (FAILURE);
 	}
 	// thinking
-	if (ft_isdead(p) == FAILURE)
-		return (FAILURE);
-	begining = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
+	begining = time_after_start(p);
 	if (ft_isdead(p) == SUCCESS)
-		printf("%lld %d is thinking\n", begining, p->id);
+		printf("%lld %d is thinking\n", time_after_start(p), p->id);
+	else
+		return (FAILURE);
+	usleep(500);
 	return (SUCCESS);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void *routine(void * arg)
 {
@@ -100,14 +126,11 @@ void *routine(void * arg)
 	int				i;
 	
 	p = (t_philo *)arg;
-	gettimeofday(&p->tv, NULL);
-	ms_time = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
+	ms_time = time_after_start(p);
 	while (ms_time < 0)
 	{
 		usleep(100);
-		gettimeofday(&p->tv, NULL);
-		ms_time = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
-
+		ms_time = time_after_start(p);
 	}
 	if (ft_isdead(p) == FAILURE)
 		return (NULL);
@@ -115,26 +138,16 @@ void *routine(void * arg)
 	while (1)
 	{
 		if (grabing_forks(ms_time, p, &i) == FAILURE)
-			{
-
 				break ;
-			}
-		// if (ft_isdead(p) == FAILURE)
-		// 	return (NULL);
-		if (eating(ms_time, p) == FAILURE)
+		if (eating(p) == FAILURE)
 			break ;
 		if (ft_isdead(p) == FAILURE)
 			break ;
-		if (sleeping_and_thinking(ms_time, p) == FAILURE)
+		if (sleeping_and_thinking(p) == FAILURE)
 			break ;
 		if (ft_isdead(p) == FAILURE)
 			break ;
 	}
-	//---------------//
-// gettimeofday(&p->tv, NULL);
-// ms_time = (p->tv.tv_sec * 1000) + (p->tv.tv_usec / 1000) - p->ms_start;
-// printf("%lld for %d, hello im here%d\n", ms_time, p->id, i++);
-//------------//
 	return (SUCCESS);
 }
 
