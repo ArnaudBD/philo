@@ -12,7 +12,7 @@ OBJS =	$(SRCS:.c=.o)
 
 CC =	gcc
 
-CFLAGS = -Wall -Werror -Wextra -pthread -g3 -fsanitize=address #-fsanitize=thread
+CFLAGS = -Wall -Werror -Wextra -pthread -g3 -fsanitize=thread #-fsanitize=address
 
 RM = 	rm -f
 

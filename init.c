@@ -72,6 +72,5 @@ int	init(t_config *c, int argc, char *argv[])
 		return (FAILURE);
 	c->forklist = malloc(sizeof(pthread_mutex_t) * c->number_of_philosophers);
 	c = init_philosophers(c);
-printf("init add = %p\n", c->philos);
 	return (SUCCESS);
 }

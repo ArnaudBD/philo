@@ -22,13 +22,13 @@ void *timekeeper(void *arg)
 	while (1)
 	{
 			id = c->philos[i].id;
-			pthread_mutex_lock(&c->philos[i].stomach);
 			gettimeofday(&tv, NULL);
 			ms_tv = (tv.tv_sec * 1000) + (tv.tv_usec / 1000) - (1000 + (c->start_time.tv_sec * 1000) + (c->start_time.tv_usec / 1000));
+			pthread_mutex_lock(&c->philos[i].stomach);
 			if ((ms_tv - c->philos[i].last_meal) > c->time_to_die)
 			{
-				printf("%lld %d died\n", ms_tv, id);
 				pthread_mutex_unlock(&c->philos[i].stomach);
+				printf("%lld %d died\n", ms_tv, id);
 				break ;
 			}
 			pthread_mutex_unlock(&c->philos[i].stomach);
