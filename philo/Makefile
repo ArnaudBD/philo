@@ -6,7 +6,8 @@ SRCS = 		main.c\
 			utils.c\
 			kill.c\
 			threads.c\
-			deathnote.c
+			deathnote.c\
+			actions.c
 
 OBJS =	$(SRCS:.c=.o)
 
