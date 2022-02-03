@@ -6,11 +6,11 @@ int	parsing(int argc, char *argv[], t_config *c)
 
 	if (argc != 5 && argc != 6)
 		return (terminator(c, ERR_PARS));
-	if (ft_atoi(argv[1]) <= 0 || ft_atoi(argv[2]) < 0 || ft_atoi(argv[3]) < 0 || ft_atoi(argv[4]) < 0)
+	if (ft_atoi(argv[1]) < 0 || ft_atoi(argv[2]) < 0 || ft_atoi(argv[3]) < 0 || ft_atoi(argv[4]) < 0)
 		return (terminator(c , ERR_PARS));
 	if (argc == 6)
 	{
-		if (ft_atoi(argv[5]) <= 0)
+		if (ft_atoi(argv[5]) < 0)
 			return (terminator(c, ERR_PARS));
 	}
 	if (ft_atoi(argv[1]) == 1)

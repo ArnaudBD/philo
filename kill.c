@@ -7,7 +7,8 @@ int	terminator(t_config *c, int code)
 	i = 0;
 	if (c->forklist && code != ERR_INIT && code != ERR_PARS)
 		free(c->forklist);
-	while (i < c->number_of_philosophers && code != ERR_INIT && code != ERR_PARS)
+	while (i < c->number_of_philosophers && code != ERR_INIT \
+	&& code != ERR_PARS)
 	{
 		pthread_mutex_destroy(&c->forklist[i]);
 		i++;

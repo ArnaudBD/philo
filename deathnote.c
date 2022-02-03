@@ -3,7 +3,6 @@
 void *timekeeper(void *arg)
 {
 	t_config		*c;
-	// struct timeval	tv;
 	int				i;
 	int				id;
 	long long int	ms_tv;
@@ -25,7 +24,6 @@ void *timekeeper(void *arg)
 			pthread_mutex_lock(c->stomach);
 			id = c->philos[i].id;
 			pthread_mutex_unlock(c->stomach);
-			// gettimeofday(&tv, NULL);
 			ms_tv = time_after_start(c->start_time);
 			pthread_mutex_lock(c->stomach);
 			full = c->philos[i].full;
@@ -45,13 +43,13 @@ void *timekeeper(void *arg)
 				i = 0;
 	}
 	i = 0;
+	pthread_mutex_lock(c->casket);
 	while (i < c->number_of_philosophers && full !=1)
 	{
-		pthread_mutex_lock(c->casket);
 		c->philos[i].dead_body = id;
-		pthread_mutex_unlock(c->casket);
 		i++;
 	}
+	pthread_mutex_unlock(c->casket);
 
 	return (SUCCESS);
 }

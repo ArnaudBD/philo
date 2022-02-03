@@ -1,52 +1,30 @@
 #include "includes/philo.h"
 
-int	ft_isdead(t_philo *p)
-{
-	pthread_mutex_lock(p->casket);
-	if (p->dead_body != 0)
-	{
-		pthread_mutex_unlock(p->casket);
-		return (FAILURE);
-	}
-	return (SUCCESS);
-}
-
 int	grabing_forks(long long int ms_time, t_philo *p, int *i)
 {
 (void)ms_time;
 	if (p->id % 2 == 0)
 	{
-printf("%lld %d is in grabing_fork() before second if---------i == %d------------------------\n", time_after_start(p->start_time), p->id, *i);
 		if (*i == 0)
 			usleep(p->time_to_eat * 500);
-printf("%lld %d is in grabing_fork() after second if---------------------------------\n", time_after_start(p->start_time), p->id);
 		pthread_mutex_lock(p->lfork);
-		// pthread_mutex_lock(p->rfork);
-		// ms_time = time_after_start(p->start_time);
 		if (ft_isdead(p) == SUCCESS)
 		{
 			printf("%lld %d has taken a fork\n", time_after_start(p->start_time), p->id);
 			pthread_mutex_unlock(p->casket);
 		}
-		// ms_time = time_after_start(p->start_time);
-		// if (ft_isdead(p) == SUCCESS)
-		// {
-		// 	printf("%lld %d has taken a fork\n", time_after_start(p->start_time), p->id);
-		// 	pthread_mutex_unlock(p->casket);
-		// }
+		pthread_mutex_lock(p->rfork);
 	}
 	else 
 	{
-		pthread_mutex_lock(p->lfork);
-		// ms_time = time_after_start(p->start_time);
+		pthread_mutex_lock(p->rfork);
 		if (ft_isdead(p) == SUCCESS)
 		{
 			printf("%lld %d has taken a fork\n", time_after_start(p->start_time), p->id);
 			pthread_mutex_unlock(p->casket);
 		}
+		pthread_mutex_lock(p->lfork);
 	}
-	pthread_mutex_lock(p->rfork);
-	// ms_time = time_after_start(p->start_time);
 	if (ft_isdead(p) == SUCCESS)
 	{
 		printf("%lld %d has taken a fork\n", time_after_start(p->start_time), p->id);
@@ -76,8 +54,8 @@ int	eating(t_philo *p)
 		now = time_after_start(p->start_time);
 		usleep(100);
 	}
-	pthread_mutex_unlock(p->lfork);
 	pthread_mutex_unlock(p->rfork);
+	pthread_mutex_unlock(p->lfork);
 	return (SUCCESS);
 }
 
@@ -100,7 +78,6 @@ int	sleeping_and_thinking(t_philo *p)
 		now = time_after_start(p->start_time);
 		usleep(100);
 	}
-	// thinking
 	begining = time_after_start(p->start_time);
 	if (ft_isdead(p) == SUCCESS)
 	{
@@ -109,24 +86,8 @@ int	sleeping_and_thinking(t_philo *p)
 	}
 	else
 		return (FAILURE);
-	
-	// usleep(100);
 	return (SUCCESS);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void *routine(void * arg)
 {
@@ -141,8 +102,6 @@ void *routine(void * arg)
 		usleep(100);
 		ms_time = time_after_start(p->start_time);
 	}
-	// if (ft_isdead(p) == FAILURE)
-	// 	return (NULL);
 	i = 0;
 	while (1)
 	{
@@ -155,7 +114,6 @@ void *routine(void * arg)
 			pthread_mutex_lock(p->stomach);
 			p->full = 1;
 			pthread_mutex_unlock(p->stomach);
-// printf("--------------------------------------------%d has eaten %d time(s)\n", p->id, i);
 			break ;
 		}	
 		if (sleeping_and_thinking(p) == FAILURE)
@@ -167,7 +125,10 @@ void *routine(void * arg)
 void	*routine_solo(void *arg)
 {
 	char	*s;
+	
 	s = (char *)arg;
-	printf("0 1 has taken a fork\n%d 1 Died\n", ft_atoi(s));
+	printf("0 1 has taken a fork\n");
+	usleep(1000 * ft_atoi(s));
+	printf("%d %d 1 died\n", ft_atoi(s), ft_atoi(s));
 	return (NULL);
 }

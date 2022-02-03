@@ -72,6 +72,7 @@ int	init(t_config *c, int argc, char *argv[]);
 // UTILS
 int		ft_atoi(const char *str);
 long long int time_after_start(struct timeval start_time);
+int	ft_isdead(t_philo *p);
 
 // KILL
 int	terminator(t_config *c, int code);
