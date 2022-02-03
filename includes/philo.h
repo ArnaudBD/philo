@@ -25,18 +25,19 @@ typedef struct	s_philo
 	pthread_mutex_t	*rfork;
 	pthread_mutex_t *lfork;
 	pthread_mutex_t *casket;
+	pthread_mutex_t *stomach;
 	int				dead_body;
 	pthread_t		t;
 	struct timeval	tv;
 	struct	timeval	start_time;
 	long long int	ms_start;
-	pthread_mutex_t stomach;
 	long long int	last_meal;
 	int 			number_of_philosophers;
 	int				time_to_die;
 	int 			time_to_eat;
 	int 			time_to_sleep;
-	int 			number_of_times_each_philosopher_must_eat;
+	int 			num_of_t_e_p_m_eat;
+	int				full;
 
 
 }	t_philo;
@@ -45,13 +46,14 @@ typedef	struct	s_config
 {
 	t_philo			*philos;
 	pthread_mutex_t	*forklist;
-	pthread_mutex_t casket;
+	pthread_mutex_t *casket;
+	pthread_mutex_t *stomach;
 	int				dead_body;
 	int 			number_of_philosophers;
 	int				time_to_die;
 	int 			time_to_eat;
 	int 			time_to_sleep;
-	int 			number_of_times_each_philosopher_must_eat;
+	int 			num_of_t_e_p_m_eat;
 	struct	timeval	start_time;
 	long long int	ms_start;
 }	t_config;

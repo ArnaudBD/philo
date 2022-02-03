@@ -16,11 +16,10 @@ int	grabing_forks(long long int ms_time, t_philo *p, int *i)
 (void)ms_time;
 	if (p->id % 2 == 0)
 	{
+printf("%lld %d is in grabing_fork() before second if---------i == %d------------------------\n", time_after_start(p->start_time), p->id, *i);
 		if (*i == 0)
-		{
 			usleep(p->time_to_eat * 500);
-		}
-		*i = 1;
+printf("%lld %d is in grabing_fork() after second if---------------------------------\n", time_after_start(p->start_time), p->id);
 		pthread_mutex_lock(p->lfork);
 		// pthread_mutex_lock(p->rfork);
 		// ms_time = time_after_start(p->start_time);
@@ -69,9 +68,9 @@ int	eating(t_philo *p)
 		printf("%lld %d is eating\n", time_after_start(p->start_time), p->id);
 		pthread_mutex_unlock(p->casket);
 	}
-	pthread_mutex_lock(&p->stomach);
+	pthread_mutex_lock(p->stomach);
 	p->last_meal = begining;
-	pthread_mutex_unlock(&p->stomach);
+	pthread_mutex_unlock(p->stomach);
 	while (now - begining < p->time_to_eat)
 	{
 		now = time_after_start(p->start_time);
@@ -110,6 +109,7 @@ int	sleeping_and_thinking(t_philo *p)
 	}
 	else
 		return (FAILURE);
+	
 	// usleep(100);
 	return (SUCCESS);
 }
@@ -136,11 +136,11 @@ void *routine(void * arg)
 	
 	p = (t_philo *)arg;
 	ms_time = time_after_start(p->start_time);
-	// while (ms_time < 0)
-	// {
-	// 	usleep(100);
-	// 	ms_time = time_after_start(p->start_time);
-	// }
+	while (ms_time < 0)
+	{
+		usleep(100);
+		ms_time = time_after_start(p->start_time);
+	}
 	// if (ft_isdead(p) == FAILURE)
 	// 	return (NULL);
 	i = 0;
@@ -150,6 +150,14 @@ void *routine(void * arg)
 			break ;
 		if (eating(p) == FAILURE)
 			break ;
+		if (++i >= p->num_of_t_e_p_m_eat && p->num_of_t_e_p_m_eat >= 0)
+		{
+			pthread_mutex_lock(p->stomach);
+			p->full = 1;
+			pthread_mutex_unlock(p->stomach);
+// printf("--------------------------------------------%d has eaten %d time(s)\n", p->id, i);
+			break ;
+		}	
 		if (sleeping_and_thinking(p) == FAILURE)
 			break ;
 	}

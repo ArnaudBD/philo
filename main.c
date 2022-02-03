@@ -20,12 +20,11 @@ int	main(int argc, char *argv[])
 	}
 // Chronos thread
 	pthread_create(&chronos, NULL, timekeeper, &c);
-	pthread_detach(chronos);
 
 // Join threads
 	while (--i >= 0)
 		pthread_join(c.philos[i].t, NULL); //== SUCCESS else pthread_mutex_destroy
-
+	pthread_join(chronos, NULL);
 
 // // Show the mutex\'s addresses 
 // 	i = 0;
