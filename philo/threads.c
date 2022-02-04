@@ -30,7 +30,10 @@ void	*routine(void *arg)
 	int				i;
 
 	p = (t_philo *)arg;
-	starting_block(p->start_time);
+	pthread_mutex_lock(p->casket);
+	// starting_block(p->start_time);
+	pthread_mutex_unlock(p->casket);
+
 	i = 0;
 	while (1)
 	{
@@ -38,7 +41,7 @@ void	*routine(void *arg)
 			break ;
 		if (eating(p) == FAILURE)
 			break ;
-		if (++i >= p->num_of_t_e_p_m_eat && p->num_of_t_e_p_m_eat >= 0)
+		if (++i >= p->num_of_t_e_p_m_eat && p->num_of_t_e_p_m_eat > 0)
 		{
 			pthread_mutex_lock(p->stomach);
 			p->full = 1;

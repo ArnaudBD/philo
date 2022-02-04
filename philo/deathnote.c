@@ -14,17 +14,25 @@
 
 int	see_the_stomach(t_config *c, int *full, long long int ms_tv, int *i)
 {
+	int	j;
+
 	pthread_mutex_lock(c->stomach);
 	*full = c->philos[*i].full;
 	if ((ms_tv - c->philos[*i].last_meal) > c->time_to_die)
 	{
-		pthread_mutex_lock(c->philos[*i].casket);
-		printf("%lld %d died\n", ms_tv, *i + 1);
+		pthread_mutex_lock(c->casket);
+		printf("%lld %d died\n", t_aft_start(c->start_time), *i + 1);
+		j = 0;
+		while (j < c->number_of_philosophers)
+		{
+			c->philos[j].dead_body = j + 1;
+			j++;
+		}
 		pthread_mutex_unlock(c->stomach);
-		pthread_mutex_unlock(c->philos[*i].casket);
 		return (FAILURE);
 	}
 	pthread_mutex_unlock(c->stomach);
+	// pthread_mutex_lock(c->casket);
 	if (*full == 1)
 		return (FAILURE);
 	return (SUCCESS);
@@ -39,22 +47,19 @@ void	*timekeeper(void *arg)
 
 	c = (t_config *)arg;
 	i = 0;
-	starting_block(c->start_time);
+	// starting_block(c->start_time);
 	while (1)
 	{
+		// usleep(500);
 		ms_tv = t_aft_start(c->start_time);
+// printf("%lld %")
 		if (see_the_stomach(c, &full, ms_tv, &i) == FAILURE)
 			break ;
 		if (++i == c->number_of_philosophers)
 			i = 0;
 	}
-	i = 0;
-	pthread_mutex_lock(c->casket);
-	while (i < c->number_of_philosophers && full != 1)
-	{
-		c->philos[i].dead_body = i + 1;
-		i++;
-	}
-	pthread_mutex_unlock(c->casket);
+		pthread_mutex_unlock(c->casket);
+	// pthread_mutex_lock(c->casket);
+	// pthread_mutex_unlock(c->casket);
 	return (SUCCESS);
 }

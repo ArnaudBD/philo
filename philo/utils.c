@@ -53,7 +53,7 @@ long long int	t_aft_start(struct timeval start_time)
 
 	gettimeofday(&tv, NULL);
 	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000) \
-	- (1000 + (start_time.tv_sec * 1000) + (start_time.tv_usec / 1000));
+	- ((start_time.tv_sec * 1000) + (start_time.tv_usec / 1000));
 	return (time);
 }
 

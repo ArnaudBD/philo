@@ -53,13 +53,19 @@ int	eating(t_philo *p)
 	long long int	begining;
 	long long int	now;
 
-	gettimeofday(&p->tv, NULL);
+	// gettimeofday(&p->tv, NULL);
 	begining = t_aft_start(p->start_time);
 	now = begining;
 	if (ft_isdead(p) == SUCCESS)
 	{
 		printf("%lld %d is eating\n", t_aft_start(p->start_time), p->id);
 		pthread_mutex_unlock(p->casket);
+	}
+	else
+	{
+		pthread_mutex_unlock(p->rfork);
+		pthread_mutex_unlock(p->lfork);
+		return (FAILURE);
 	}
 	pthread_mutex_lock(p->stomach);
 	p->last_meal = begining;
@@ -71,6 +77,7 @@ int	eating(t_philo *p)
 	}
 	pthread_mutex_unlock(p->rfork);
 	pthread_mutex_unlock(p->lfork);
+
 	return (SUCCESS);
 }
 
