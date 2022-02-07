@@ -30,7 +30,8 @@ void	*routine(void *arg)
 	int				i;
 
 	p = (t_philo *)arg;
-	starting_block(p->start_time);
+	pthread_mutex_lock(p->casket);
+	pthread_mutex_unlock(p->casket);
 	i = 0;
 	while (1)
 	{

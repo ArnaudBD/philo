@@ -76,6 +76,23 @@ t_config	*init_philosophers(t_config *c)
 	return (c);
 }
 
+int	init_malloc(t_config *c)
+{
+	c->philos = malloc(sizeof(t_philo) * c->number_of_philosophers);
+	if (!c->philos)
+		return (FAILURE);
+	c->forklist = malloc(sizeof(pthread_mutex_t) * c->number_of_philosophers);
+	if (!c->forklist)
+		return (FAILURE);
+	c->casket = malloc(sizeof(pthread_mutex_t));
+	if (!c->casket)
+		return (FAILURE);
+	c->stomach = malloc(sizeof(pthread_mutex_t));
+	if (!c->stomach)
+		return (FAILURE);
+	return (SUCCESS);
+}
+
 int	init(t_config *c, int argc, char *argv[])
 {
 	gettimeofday(&c->start_time, NULL);
@@ -90,12 +107,8 @@ int	init(t_config *c, int argc, char *argv[])
 		c->num_of_t_e_p_m_eat = ft_atoi(argv[5]);
 	else
 		c->num_of_t_e_p_m_eat = -1;
-	c->philos = malloc(sizeof(t_philo) * c->number_of_philosophers);
-	if (!c->philos)
+	if (init_malloc(c) == FAILURE)
 		return (FAILURE);
-	c->forklist = malloc(sizeof(pthread_mutex_t) * c->number_of_philosophers);
-	c->casket = malloc(sizeof(pthread_mutex_t));
-	c->stomach = malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(c->casket, NULL);
 	pthread_mutex_init(c->stomach, NULL);
 	c = init_philosophers(c);

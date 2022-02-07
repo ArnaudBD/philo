@@ -17,8 +17,6 @@ int	terminator(t_config *c, int code)
 	int	i;
 
 	i = 0;
-	if (c->forklist && code != ERR_INIT && code != ERR_PARS)
-		free(c->forklist);
 	while (i < c->number_of_philosophers && code != ERR_INIT \
 	&& code != ERR_PARS)
 	{
@@ -28,9 +26,16 @@ int	terminator(t_config *c, int code)
 	if (c->philos && code != ERR_INIT && code != ERR_PARS)
 	{
 		pthread_mutex_destroy(c->stomach);
+		free(c->stomach);
 		free(c->philos);
+		free(c->forklist);
+	}
+	if (code != ERR_INIT && code != ERR_PARS)
+	{
+		pthread_mutex_destroy(c->casket);
+		free(c->casket);
 	}
 	if (code != SUCCESS)
 		return (FAILURE);
 	return (SUCCESS);
-}
+}	
