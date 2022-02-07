@@ -49,6 +49,7 @@ void	*timekeeper(void *arg)
 	i = 0;
 	while (1)
 	{
+		usleep(200);
 		ms_tv = t_aft_start(c->start_time);
 		if (see_the_stomach(c, &full, ms_tv, &i) == FAILURE)
 			break ;

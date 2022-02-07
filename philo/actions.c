@@ -67,7 +67,7 @@ int	eating(t_philo *p)
 	while (now - begining < p->time_to_eat)
 	{
 		now = t_aft_start(p->start_time);
-		usleep(100);
+		usleep(500);
 	}
 	pthread_mutex_unlock(p->rfork);
 	pthread_mutex_unlock(p->lfork);
@@ -103,7 +103,7 @@ int	sleeping_and_thinking(t_philo *p)
 	while (now - begining < p->time_to_sleep)
 	{
 		now = t_aft_start(p->start_time);
-		usleep(100);
+		usleep(500);
 	}
 	if (thinking(p) == FAILURE)
 		return (FAILURE);
