@@ -67,7 +67,7 @@ int	eating(t_philo *p)
 	while (now - begining < p->time_to_eat)
 	{
 		now = t_aft_start(p->start_time);
-		usleep(500);
+		usleep(100);
 	}
 	pthread_mutex_unlock(p->rfork);
 	pthread_mutex_unlock(p->lfork);
