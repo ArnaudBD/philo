@@ -59,6 +59,6 @@ void	*routine_solo(void *arg)
 	s = (char *)arg;
 	printf("0 1 has taken a fork\n");
 	usleep(1000 * ft_atoi(s));
-	printf("%d %d 1 died\n", ft_atoi(s), ft_atoi(s));
+	printf("%d 1 died\n", ft_atoi(s));
 	return (NULL);
 }
