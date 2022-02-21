@@ -12,6 +12,12 @@
 
 #include "includes/philo.h"
 
+void	printerror(int code)
+{
+	if (code == ERR_PARS)
+		printf("Parsing error\n");
+}
+
 int	terminator(t_config *c, int code)
 {
 	int	i;
@@ -35,6 +41,7 @@ int	terminator(t_config *c, int code)
 		pthread_mutex_destroy(c->casket);
 		free(c->casket);
 	}
+	printerror(code);
 	if (code != SUCCESS)
 		return (FAILURE);
 	return (SUCCESS);
