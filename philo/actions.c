@@ -76,10 +76,23 @@ int	eating(t_philo *p)
 
 int	thinking(t_philo *p)
 {
+	long long int	begining;
+	long long int	now;
+
+	begining = t_aft_start(p->start_time);
+	now = begining;
+
+	
 	if (ft_isdead(p) == SUCCESS)
 	{
 		printf("%lld %d is thinking\n", t_aft_start(p->start_time), p->id);
 		pthread_mutex_unlock(p->casket);
+		while (now - begining < (p->time_to_die - p->time_to_eat - p->time_to_sleep) / 2)
+	{
+		now = t_aft_start(p->start_time);
+		usleep(100);
+	}
+
 	}
 	else
 		return (FAILURE);
