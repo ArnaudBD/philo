@@ -1,0 +1,1 @@
+Philo is a project that simulates the dining philosophers problem, a classic synchronization problem in computer science. In this project, philosophers sit around a table and alternate between eating spaghetti and thinking. The goal is to prevent deadlocks and starvation while ensuring that each philosopher gets a chance to eat.
